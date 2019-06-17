@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thirty">
+	<insert id="thirtyinsert" parameterType="com.myproject.web.posts.ThirtyDTO">
+		insert into thirty
+		(idx,title,text,write_date, views_cnt)
+		values
+		( (SELECT NVL(MAX(IDX)+1,0) FROM thirty),#{title},#{text},sysdate,0)
+	</insert>
+	
+	<select id="thirtyselectAll" resultType="com.myproject.web.posts.ThirtyDTO">
+		select * from thirty
+		order by idx desc
+	</select>
+	
+	<select id="thirtyselectText" resultType="com.myproject.web.posts.ThirtyDTO"
+								  parameterType="java.lang.Integer">
+		select idx, title, text, views_cnt from thirty
+		where idx=#{idx}
+		
+	</select>
+	
+	<select id="thirtyselectFive" resultType="com.myproject.web.posts.ThirtyDTO">
+<!-- 				select * from thirty -->
+<!-- 		order by idx desc   -->
+select * from ( select rownum rnum, b.* from (select * from thirty order by views_cnt desc) b ) where rnum between 1 and 5
+<!-- 		SELECT * FROM (SELECT * FROM thirty ORDER BY views_cnt DESC) WHERE ROWNUM=5 -->
+		
+	</select>
+	
+	<select id="thirtycnt" resultType="com.myproject.web.posts.ThirtyDTO"
+								  parameterType="java.lang.Integer">
+		
+		update thirty set views_cnt = views_cnt +1
+		where idx=#{idx}
+	</select>
+	<select id="thirtyupdate" resultType="com.myproject.web.posts.ThirtyDTO"
+							  parameterType="com.myproject.web.posts.ThirtyDTO">
+		UPDATE thirty SET title = #{title}, text = #{text},write_date=sysdate WHERE idx = #{idx}
+	</select>
+	
+	<select id="thirtydelete" resultType="com.myproject.web.posts.ThirtyDTO"
+							  parameterType="com.myproject.web.posts.ThirtyDTO">
+		delete thirty where idx=#{idx}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

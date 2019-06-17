@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="love">
+	<insert id="loveinsert" parameterType="com.myproject.web.picture_diary.love.LoveDTO">
+		insert into love
+		(idx,title,img,upload_date,views_cnt)
+		values
+		( (SELECT NVL(MAX(IDX)+1,0) FROM love),#{title},#{title},sysdate,0)
+	</insert>
+	
+	<select id="loveselectAll" resultType="com.myproject.web.picture_diary.love.LoveDTO">
+		select * from love
+		order by idx desc
+	</select>
+	
+	<select id="loveselectFive" resultType="com.myproject.web.picture_diary.love.LoveDTO">
+		select * from ( select rownum rnum, b.* from (select * from love order by views_cnt desc) b ) where rnum between 1 and 5
+	</select>
+	
+	<select id="loveselectText" resultType="com.myproject.web.picture_diary.love.LoveDTO"
+								  parameterType="java.lang.Integer">
+		select idx, title, img, views_cnt from love
+		where idx=#{idx}
+	</select>
+	
+	<select id="lovecnt" resultType="com.myproject.web.picture_diary.love.LoveDTO"
+								  parameterType="java.lang.Integer">
+		
+		update love set views_cnt = views_cnt +1
+		where idx=#{idx}
+	</select>
+	
+	<select id="loveselectimg" resultType="com.myproject.web.picture_diary.love.LoveDTO"
+								  parameterType="java.lang.Integer">
+		select idx, title, img, views_cnt from love
+		where idx=#{idx}
+	</select>
+	
+	<select id="loveupdate" resultType="com.myproject.web.picture_diary.love.LoveDTO"
+							  parameterType="com.myproject.web.picture_diary.love.LoveDTO">
+		UPDATE love SET title = #{title}, img = #{title},update_date=sysdate WHERE idx = #{idx}
+	</select>
+	
+	<select id="lovedelete" resultType="com.myproject.web.picture_diary.love.LoveDTO"
+							  parameterType="com.myproject.web.picture_diary.love.LoveDTO">
+		delete love where idx=#{idx}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

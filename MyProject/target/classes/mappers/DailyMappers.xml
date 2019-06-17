@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daily">
+	<insert id="dailyinsert" parameterType="com.myproject.web.picture_diary.daily.DailyDTO">
+		insert into daily
+		(idx,title,img,upload_date,views_cnt)
+		values
+		( (SELECT NVL(MAX(IDX)+1,0) FROM daily),#{title},#{title},sysdate,0)
+	</insert>
+	
+	<select id="dailyselectAll" resultType="com.myproject.web.picture_diary.daily.DailyDTO">
+		select * from daily
+		order by idx desc
+	</select>
+	
+	<select id="dailyselectFive" resultType="com.myproject.web.picture_diary.daily.DailyDTO">
+		select * from ( select rownum rnum, b.* from (select * from daily order by views_cnt desc) b ) where rnum between 1 and 5
+	</select>
+		
+	<select id="dailyselectText" resultType="com.myproject.web.picture_diary.daily.DailyDTO"
+								  parameterType="java.lang.Integer">
+		select idx, title, img, views_cnt from daily
+		where idx=#{idx}
+	</select>
+	
+	<select id="dailycnt" resultType="com.myproject.web.picture_diary.daily.DailyDTO"
+								  parameterType="java.lang.Integer">
+		
+		update daily set views_cnt = views_cnt +1
+		where idx=#{idx}
+	</select>
+	
+	<select id="dailyselectimg" resultType="com.myproject.web.picture_diary.daily.DailyDTO"
+								  parameterType="java.lang.Integer">
+		select idx, title, img, views_cnt from daily
+		where idx=#{idx}
+	</select>
+	
+	<select id="dailyupdate" resultType="com.myproject.web.picture_diary.daily.DailyDTO"
+							  parameterType="com.myproject.web.picture_diary.daily.DailyDTO">
+		UPDATE daily SET title = #{title}, img = #{title},update_date=sysdate WHERE idx = #{idx}
+	</select>
+	
+	<select id="dailydelete" resultType="com.myproject.web.picture_diary.daily.DailyDTO"
+							  parameterType="com.myproject.web.picture_diary.daily.DailyDTO">
+		delete daily where idx=#{idx}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
